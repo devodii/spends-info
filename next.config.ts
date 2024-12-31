@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   rewrites: async () => {
@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
       {
         source: "/api/py/:path*",
         destination:
-          process.env.NODE_ENV === "development"
-            ? "http://127.0.0.1:8000/api/py/:path*"
-            : "/api/",
+          process.env.NODE_ENV === "development" ? "http://127.0.0.1:8000/api/py/:path*" : "/api/",
       },
       {
         source: "/docs",
@@ -24,8 +22,8 @@ const nextConfig: NextConfig = {
             ? "http://127.0.0.1:8000/api/py/openapi.json"
             : "/api/py/openapi.json",
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
