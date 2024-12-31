@@ -1,3 +1,5 @@
+"use client";
+
 import { Loader } from "lucide-react";
 import { Button, ButtonProps } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +15,7 @@ export const LoadingButton = ({
   ...forwardedProps
 }: Props) => {
   const { pending } = useFormStatus();
+
   return (
     <Button
       className={cn("flex gap-2 items-center justify-center", className)}

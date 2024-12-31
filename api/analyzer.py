@@ -22,4 +22,3 @@ def pdf_to_text(pdf_url):
    
 
     return text
-
