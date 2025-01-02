@@ -1,10 +1,14 @@
-from fastapi import FastAPI
-from api.analyzer import pdf_to_text
+from fastapi import FastAPI, HTTPException
+from api.analyzer import pdf_to_text, parse_transactions
+from api.model import TransactionsResponse
 
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
-
-@app.get('/api/python/')
+@app.get('/api/py', response_model=TransactionsResponse)
 def hello_world(url: str) -> str:
+    if not url:
+        raise HTTPException(status_code=404, detail='URL is required')
+    
     text = pdf_to_text(url)
-    return text
+    transactions = parse_transactions(text)
+    return {"transactions": transactions}
