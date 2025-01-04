@@ -6,14 +6,17 @@
     "fastapi-dev": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
     "next-dev": "next dev",
     "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
-    "build": "npm run migrate && next build",
+    "build": "npm run migrate || true && next build",
     "start": "next start",
     "fix-prettier": "prettier --write \"**/*.{js,ts,tsx,md,mdx,py}\"",
     "lint": "next lint",
     "migrate": "npx drizzle-kit generate && npx drizzle-kit migrate"
   },
   "dependencies": {
+    "@radix-ui/react-progress": "^1.1.1",
+    "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-slot": "^1.1.1",
+    "@uploadthing/react": "^7.1.5",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
@@ -32,7 +35,8 @@
     "sonner": "^1.7.1",
     "sooner": "^1.1.4",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^7.4.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -4,14 +4,6 @@ import os
 import tempfile
 import re
 
-from pydantic import BaseModel
-
-class Transaction(BaseModel):
-    name: str
-    date: str
-    type: str
-    amount: float
-
 def pdf_to_text(pdf_url):
     response = requests.get(pdf_url)
     response.raise_for_status()  
