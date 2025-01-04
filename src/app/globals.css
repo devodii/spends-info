@@ -76,7 +76,6 @@ body {
   --size: 16px;
   height: var(--size);
   width: var(--size);
-  position: absolute;
   inset: 0;
   z-index: 10;
 }
