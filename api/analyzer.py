@@ -33,7 +33,6 @@ def parse_transactions(data: str):
     rows = [extract_transactions(row) for row in data.split('\n')]
     rows = [result for row in data.split('\n') if (result := extract_transactions(row)) and len(result) > 1]    
    
-    print(rows)
     for row in rows:
         date_match = re.search(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2} (?:AM|PM)", row)
         if date_match:
