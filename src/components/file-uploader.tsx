@@ -12,6 +12,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useControllableState } from "@/hooks/use-controllable-state"
 import { cn, formatBytes } from "@/lib/utils"
 
+interface FileWithMetadata extends File {
+  isRemovable?: boolean
+  preview?: string
+}
+
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Value of the uploader.
@@ -19,7 +24,7 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default undefined
    * @example value={files}
    */
-  value?: File[]
+  value?: FileWithMetadata[]
 
   /**
    * Function to be called when the value changes.
@@ -106,7 +111,7 @@ export function FileUploader(props: FileUploaderProps) {
     ...dropzoneProps
   } = props
 
-  const [files, setFiles] = useControllableState({
+  const [files, setFiles] = useControllableState<FileWithMetadata[]>({
     prop: valueProp,
     onChange: onValueChange,
   })
@@ -124,9 +129,7 @@ export function FileUploader(props: FileUploaderProps) {
       }
 
       const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        }),
+        Object.assign(file, { preview: URL.createObjectURL(file) }),
       )
 
       const updatedFiles = files ? [...files, ...newFiles] : newFiles
@@ -145,6 +148,7 @@ export function FileUploader(props: FileUploaderProps) {
         toast.promise(onUpload(updatedFiles), {
           loading: `Uploading ${target}...`,
           success: () => {
+            if (files) files.map((file) => Object.assign(file, { isRemovable: false }))
             return `${target} uploaded`
           },
           error: `Failed to upload ${target}`,
@@ -238,6 +242,7 @@ export function FileUploader(props: FileUploaderProps) {
                 file={file}
                 onRemove={() => onRemove(index)}
                 progress={progresses?.[file.name]}
+                {...(!file?.isRemovable && { isRemovable: false })}
               />
             ))}
           </div>
@@ -251,9 +256,10 @@ interface FileCardProps {
   file: File
   onRemove: () => void
   progress?: number
+  isRemovable?: boolean
 }
 
-function FileCard({ file, progress, onRemove }: FileCardProps) {
+const FileCard = ({ file, progress, onRemove, isRemovable = true }: FileCardProps) => {
   return (
     <div className="relative flex items-center gap-2.5">
       <div className="flex flex-1 gap-2.5">
@@ -266,12 +272,14 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
           {progress ? <Progress value={progress} /> : null}
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <Button type="button" variant="outline" size="icon" className="size-7" onClick={onRemove}>
-          <X className="size-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
-        </Button>
-      </div>
+      {isRemovable && (
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="icon" className="size-7" onClick={onRemove}>
+            <X className="size-4" aria-hidden="true" />
+            <span className="sr-only">Remove file</span>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

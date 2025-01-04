@@ -1,13 +1,14 @@
 "use client"
 
 import { FileUploader } from "@/components/file-uploader"
+import { LoadingButton } from "@/components/loading-button"
 import { badgeVariants } from "@/components/ui/badge"
 import { useUploadFile } from "@/hooks/use-upload-file"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 export default function Home() {
-  const { onUpload, progresses, isUploading } = useUploadFile("pdf", {
+  const { onUpload, progresses, isUploading, uploadResult } = useUploadFile("pdf", {
     defaultUploadedFiles: [],
   })
 
@@ -25,17 +26,7 @@ export default function Home() {
           disabled={isUploading}
         />
 
-        {/* <UploadDropzone
-          endpoint="pdf"
-          onClientUploadComplete={(res) => {
-            console.log("Files: ", res)
-            toast.success("Successfully uploaded")
-          }}
-          onUploadError={(error: Error) => {
-            console.log({ error })
-            toast.error("Something went wrong")
-          }}
-        /> */}
+        {uploadResult?.url && <LoadingButton loading={true} text="Generate summary" />}
 
         <Link
           className={cn(

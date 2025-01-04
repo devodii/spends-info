@@ -20,11 +20,12 @@ export function useUploadFile(
 ) {
   const [progresses, setProgresses] = React.useState<Record<string, number>>({})
   const [isUploading, setIsUploading] = React.useState(false)
+  const [uploadResult, setUploadResult] = React.useState<{ url: string } | null>(null)
 
   async function onUpload(files: File[]) {
     setIsUploading(true)
     try {
-      await uploadFiles(endpoint, {
+      const res = await uploadFiles(endpoint, {
         ...forwardedProps,
         files,
         onUploadProgress: ({ file, progress }) => {
@@ -36,6 +37,7 @@ export function useUploadFile(
           })
         },
       })
+      setUploadResult({ url: res[0].url })
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message)
@@ -52,5 +54,6 @@ export function useUploadFile(
     onUpload,
     progresses,
     isUploading,
+    uploadResult,
   }
 }
