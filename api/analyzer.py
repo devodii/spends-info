@@ -2,7 +2,6 @@ import requests
 import PyPDF2
 import os
 import tempfile
-import re
 
 def pdf_to_text(pdf_url):
     response = requests.get(pdf_url)
@@ -22,36 +21,3 @@ def pdf_to_text(pdf_url):
         os.remove(temp_pdf_path)
 
     return text
-    
-
-    
-def parse_transactions(data: str):
-    print('Parsing transactions..')
-    transactions = []
-    
-    extract_transactions = lambda content: content[re.search(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2} (?:AM|PM)", content).start():] if re.search(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2} (?:AM|PM)", content) else ""
-    rows = [extract_transactions(row) for row in data.split('\n')]
-    rows = [result for row in data.split('\n') if (result := extract_transactions(row)) and len(result) > 1]    
-   
-    for row in rows:
-        date_match = re.search(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2} (?:AM|PM)", row)
-        if date_match:
-            date = date_match.group()
-
-            # todo: handle receiving events.
-            name_match = re.search(r"Send to (.+?)-", row)
-            amount_match = re.search(r"-([0-9,]+\.\d{2})", row)
-
-            if name_match and amount_match:
-                name = name_match.group(1).strip()
-                amount = float(amount_match.group(1).replace(",", ""))
-                transaction_type = "send"
-
-                transactions.append({
-                    "name": name,
-                    "date": date,
-                    "type": transaction_type,
-                    "amount": abs(amount),
-                })
-
-    return transactions

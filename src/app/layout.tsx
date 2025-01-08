@@ -3,7 +3,7 @@ import { Toaster } from "sonner"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Palmpay Advisor",
+  title: "Spends Info",
   description: "Explain my transaction history",
 }
 
