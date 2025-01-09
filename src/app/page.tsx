@@ -9,54 +9,36 @@ import Link from "next/link"
 import { useActionState, useState } from "react"
 import Markdown from "react-markdown"
 import { toast } from "sonner"
-import { generateSummaryCompletion } from "./actions"
+import { generateSummaryCompletion, putSummary } from "./actions"
 import { ResponseSchema } from "./schema"
 
 const markdownStyles = `flex flex-col gap-2 w-full max-w-2xl [&>_h1]:text-[27px] [&>_h1]:font-semibold [&>_h2]:text-[24px] [&>_h2]:font-semibold [&>h3]:text-[20px] [&>h3]:font-semibold [&>h4]:text-[18px] [&>h4]:font-semibold`
-
-type SummaryState = "idle" | "parsing" | "generating"
-
-const getCTA = (state: SummaryState) => {
-  switch (state) {
-    case "generating":
-      return "Processing by assistant"
-    case "parsing":
-      return "Parsing document"
-    case "idle":
-      return "Generate summary"
-  }
-}
 
 export default function Home() {
   const { onUpload, progresses, isUploading, uploadResult } = useUploadFile("pdf", {
     defaultUploadedFiles: [],
   })
 
-  const [state, setState] = useState<SummaryState>("idle")
-
   const [summary, setSummary] = useState<ResponseSchema | null>(null)
 
   const [, formAction] = useActionState(async () => {
     try {
-      setTimeout(() => setState("parsing"), 100)
-
       const res = await fetch(absoluteUrl(`/api/py?url=${uploadResult?.url}`), {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       })
       const data = await res.text()
 
-      setState("generating")
-
       const summary = await generateSummaryCompletion(JSON.stringify(data))
       setSummary(summary!)
+
+      if (uploadResult) {
+        await putSummary(JSON.stringify(summary), uploadResult.id)
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message)
       }
-      toast.error("Something went wrong.")
-    } finally {
-      setState("idle")
     }
   }, null)
 
@@ -78,7 +60,7 @@ export default function Home() {
         {uploadResult?.url && (
           <form action={formAction} className="mt-6">
             <LoadingButton
-              text={getCTA(state)}
+              text="Analyze"
               className="w-full max-w-[300px] rounded-[100px]"
               type="submit"
             />
@@ -100,7 +82,7 @@ export default function Home() {
             }),
           )}
           target="_blank"
-          href="https://medium.com/@emmanuelodii80"
+          href="https://medium.com/@emmanuelodii80/spends-info-lifetime-updates-1829db5a36d5"
         >
           📖 Read the book
         </Link>

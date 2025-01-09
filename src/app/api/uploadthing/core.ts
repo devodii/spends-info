@@ -1,15 +1,17 @@
+import { putUpload } from "@/app/actions"
 import { createUploadthing, type FileRouter } from "uploadthing/next"
 
 const f = createUploadthing()
 
 export const ourFileRouter = {
   pdf: f(["pdf"])
-    .middleware(async () => await Promise.resolve({ state: true }))
+    .middleware(async ({ req }) => {
+      const ipAddress = req.headers.get("x-forwarded-for") as string
+      return { ipAddress }
+    })
     .onUploadComplete(async ({ file, metadata }) => {
-      console.log({ state: metadata.state, url: file.url })
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { url: file.url }
+      const response = await putUpload(file.url, metadata.ipAddress)
+      return { url: file.url, id: response[0].id }
     }),
 } satisfies FileRouter
 

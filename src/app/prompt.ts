@@ -13,4 +13,4 @@ Respond with the content formatted as markdown.
 Include the appropriate header for each section, e.g ## Recommendations, etc..
 Always make sure you use whatever currency is in the statement, if not default to Naira.
 
-If the "transaction history" provided by a user isn't a real transaction history, just respond with Invalid transaction history.`
+If the "transaction history" provided by a user isn't a real transaction history, just set the value for \`is_transaction_history\` to false so that it can be handled by the frontend`
