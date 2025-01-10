@@ -36,11 +36,11 @@ export const generateSummaryCompletion = async (
   }
 }
 
-export const putSummary = async (rich_text: string, upload_id: string) => {
+export const postSummary = async (rich_text: string, upload_id: string) => {
   return db.insert(summary).values({ rich_text, upload_id, id: `su_${nanoid(6)}` })
 }
 
-export const putUpload = async (file_url: string, ip_address: string) => {
+export const postUpload = async (file_url: string, ip_address: string) => {
   return db
     .insert(upload)
     .values({ id: `up_${nanoid(6)}`, file_url, ip_address })

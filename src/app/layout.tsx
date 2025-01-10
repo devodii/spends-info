@@ -1,3 +1,4 @@
+import { RTKRootProvider } from "@/rtk-root-provider"
 import type { Metadata } from "next"
 import { Toaster } from "sonner"
 import "./globals.css"
@@ -14,8 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
-      <Toaster />
+      <RTKRootProvider>
+        <body className="antialiased">{children}</body>
+        <Toaster />
+      </RTKRootProvider>
     </html>
   )
 }

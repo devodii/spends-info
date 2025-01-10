@@ -1,4 +1,4 @@
-import { putUpload } from "@/app/actions"
+import { postUpload } from "@/app/actions"
 import { createUploadthing, type FileRouter } from "uploadthing/next"
 
 const f = createUploadthing()
@@ -10,7 +10,7 @@ export const ourFileRouter = {
       return { ipAddress }
     })
     .onUploadComplete(async ({ file, metadata }) => {
-      const response = await putUpload(file.url, metadata.ipAddress)
+      const response = await postUpload(file.url, metadata.ipAddress)
       return { url: file.url, id: response[0].id }
     }),
 } satisfies FileRouter

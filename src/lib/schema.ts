@@ -17,5 +17,12 @@ export const summary = pgTable("summary", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 })
 
+export const feedback = pgTable("feedback", {
+  id: varchar("id").primaryKey().notNull(),
+  comment: varchar("comment").notNull(),
+  ip_address: varchar("ip_adderess").notNull(),
+})
+
 export type Upload = typeof upload.$inferSelect
 export type Summary = typeof summary.$inferSelect
+export type Feedback = typeof feedback.$inferSelect

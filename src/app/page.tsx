@@ -2,6 +2,7 @@
 
 import { FileUploader } from "@/components/file-uploader"
 import { LoadingButton } from "@/components/loading-button"
+import { SendFeedback } from "@/components/send-feedback"
 import { badgeVariants } from "@/components/ui/badge"
 import { useUploadFile } from "@/hooks/use-upload-file"
 import { absoluteUrl, cn } from "@/lib/utils"
@@ -9,7 +10,7 @@ import Link from "next/link"
 import { useActionState, useState } from "react"
 import Markdown from "react-markdown"
 import { toast } from "sonner"
-import { generateSummaryCompletion, putSummary } from "./actions"
+import { generateSummaryCompletion, postSummary } from "./actions"
 import { ResponseSchema } from "./schema"
 
 const markdownStyles = `flex flex-col gap-2 w-full max-w-2xl [&>_h1]:text-[27px] [&>_h1]:font-semibold [&>_h2]:text-[24px] [&>_h2]:font-semibold [&>h3]:text-[20px] [&>h3]:font-semibold [&>h4]:text-[18px] [&>h4]:font-semibold`
@@ -40,7 +41,7 @@ export default function Home() {
       }
 
       if (uploadResult) {
-        await putSummary(JSON.stringify(summary), uploadResult.id)
+        await postSummary(JSON.stringify(summary), uploadResult.id)
       }
     } catch (error) {
       console.log({ error })
@@ -79,6 +80,9 @@ export default function Home() {
             <Markdown className={markdownStyles}>{summary.top_recipents}</Markdown>
           </div>
         )}
+
+        <SendFeedback />
+
         <Link
           className={cn(
             badgeVariants({
