@@ -30,15 +30,20 @@ export default function Home() {
       const data = await res.text()
 
       const summary = await generateSummaryCompletion(JSON.stringify(data))
-      setSummary(summary!)
+
+      if ("content" in summary) {
+        setSummary(summary.content)
+      }
+
+      if ("error" in summary) {
+        toast.error(summary.error)
+      }
 
       if (uploadResult) {
         await putSummary(JSON.stringify(summary), uploadResult.id)
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message)
-      }
+      console.log({ error })
     }
   }, null)
 

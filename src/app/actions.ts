@@ -6,9 +6,11 @@ import { summary, upload } from "@/lib/schema"
 import { nanoid } from "nanoid"
 import { zodResponseFormat } from "openai/helpers/zod"
 import { makePrompt } from "./prompt"
-import { responseSchema } from "./schema"
+import { responseSchema, ResponseSchema } from "./schema"
 
-export const generateSummaryCompletion = async (data: string) => {
+export const generateSummaryCompletion = async (
+  data: string,
+): Promise<{ success: true; content: ResponseSchema } | { success: false; error: string }> => {
   try {
     const response = await openai.beta.chat.completions.parse({
       model: "gpt-4o-mini",
@@ -21,13 +23,16 @@ export const generateSummaryCompletion = async (data: string) => {
 
     const content = response.choices[0].message.parsed
 
-    if (!content?.is_transaction_history) throw new Error("Invalid transaction history")
+    if (!content?.is_transaction_history) {
+      return { success: false, error: "Invalid transaction history" }
+    }
 
-    return response.choices[0].message.parsed
+    return { success: true, content: response.choices[0].message.parsed! }
   } catch (error: unknown) {
     if (error instanceof Error) {
-      throw new Error(error.message)
+      return { success: false, error: error.message }
     }
+    return { success: false, error: "An unexpected error occured" }
   }
 }
 
