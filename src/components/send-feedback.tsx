@@ -1,3 +1,5 @@
+import { Spinner } from "@/components/spinner"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -6,16 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { api } from "@/lib/api"
+import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-import { Spinner } from "./spinner"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
 
 const feedbackSchema = z.object({
   comment: z.string().trim().min(1, { message: "Required" }),
@@ -28,7 +28,7 @@ export const SendFeedback = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (comment: string) => {
-      const { data } = await api.post("/feedback", { comment })
+      const { data } = await axios.post("/api/feedback", { comment })
       return data as { success: boolean }
     },
     onSuccess: (response) => {
@@ -45,7 +45,7 @@ export const SendFeedback = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="outline">Share feedback</Button>
       </DialogTrigger>
       <DialogContent>

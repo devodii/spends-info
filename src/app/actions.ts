@@ -6,11 +6,12 @@ import { summary, upload } from "@/lib/schema"
 import { nanoid } from "nanoid"
 import { zodResponseFormat } from "openai/helpers/zod"
 import { makePrompt } from "./prompt"
-import { responseSchema, ResponseSchema } from "./schema"
+import { responseSchema } from "./schema"
+import { SummaryCompletionResponse } from "./types"
 
 export const generateSummaryCompletion = async (
   data: string,
-): Promise<{ success: true; content: ResponseSchema } | { success: false; error: string }> => {
+): Promise<SummaryCompletionResponse> => {
   try {
     const response = await openai.beta.chat.completions.parse({
       model: "gpt-4o-mini",

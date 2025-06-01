@@ -5,16 +5,18 @@ import { LoadingButton } from "@/components/loading-button"
 import { SendFeedback } from "@/components/send-feedback"
 import { badgeVariants } from "@/components/ui/badge"
 import { useUploadFile } from "@/hooks/use-upload-file"
-import { pdfToText } from "@/lib/file"
-import { absoluteUrl, cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import axios, { AxiosResponse } from "axios"
 import Link from "next/link"
 import { useActionState, useState } from "react"
 import Markdown from "react-markdown"
 import { toast } from "sonner"
-import { generateSummaryCompletion, postSummary } from "./actions"
 import { ResponseSchema } from "./schema"
+import { SummaryCompletionResponse } from "./types"
 
 const markdownStyles = `flex flex-col gap-2 w-full max-w-2xl [&>_h1]:text-[27px] [&>_h1]:font-semibold [&>_h2]:text-[24px] [&>_h2]:font-semibold [&>h3]:text-[20px] [&>h3]:font-semibold [&>h4]:text-[18px] [&>h4]:font-semibold`
+
+export const runtime = "nodejs"
 
 export default function Home() {
   const { onUpload, progresses, isUploading, uploadResult } = useUploadFile("pdf", {
@@ -25,31 +27,22 @@ export default function Home() {
 
   const [, formAction] = useActionState(async () => {
     try {
-      const res = await fetch(absoluteUrl(`/api/py?url=${uploadResult?.url}`), {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      })
-      const data = await res.text()
-
       if (!uploadResult) throw new Error("Failed to upload file")
 
-      const pdfText = await pdfToText(uploadResult.url)
+      const { data: summary } = await axios.post<
+        any,
+        AxiosResponse<SummaryCompletionResponse, any>
+      >(`${process.env.NEXT_PUBLIC_API_URL}/api/analyze`, { fileUrl: uploadResult.url })
 
-      const summary = await generateSummaryCompletion(pdfText)
+      if ("content" in summary) setSummary(summary.content)
 
-      if ("content" in summary) {
-        setSummary(summary.content)
-      }
-
-      if ("error" in summary) {
-        toast.error(summary.error)
-      }
-
-      if (uploadResult) {
-        await postSummary(JSON.stringify(summary), uploadResult.id)
-      }
+      if ("error" in summary) throw new Error(summary.error)
     } catch (error) {
-      console.log({ error })
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error("Something went wrong")
+      }
     }
   }, null)
 

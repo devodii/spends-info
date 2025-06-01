@@ -1,4 +1,4 @@
-import pdfParse from "pdf-parse"
+  import pdfParse from "pdf-parse"
 
 export const pdfToText = async (pdfUrl: string) => {
   const pdf = await fetch(pdfUrl)
