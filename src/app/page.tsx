@@ -5,6 +5,7 @@ import { LoadingButton } from "@/components/loading-button"
 import { SendFeedback } from "@/components/send-feedback"
 import { badgeVariants } from "@/components/ui/badge"
 import { useUploadFile } from "@/hooks/use-upload-file"
+import { pdfToText } from "@/lib/file"
 import { absoluteUrl, cn } from "@/lib/utils"
 import Link from "next/link"
 import { useActionState, useState } from "react"
@@ -30,7 +31,11 @@ export default function Home() {
       })
       const data = await res.text()
 
-      const summary = await generateSummaryCompletion(JSON.stringify(data))
+      if (!uploadResult) throw new Error("Failed to upload file")
+
+      const pdfText = await pdfToText(uploadResult.url)
+
+      const summary = await generateSummaryCompletion(pdfText)
 
       if ("content" in summary) {
         setSummary(summary.content)
