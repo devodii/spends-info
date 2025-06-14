@@ -25,14 +25,16 @@ export default function Home() {
 
   const [summary, setSummary] = useState<ResponseSchema | null>(null)
 
+  const fileUploadUrl = uploadResult?.url
+
   const [, formAction] = useActionState(async () => {
     try {
-      if (!uploadResult) throw new Error("Failed to upload file")
+      if (!fileUploadUrl) throw new Error("Failed to upload file")
 
       const { data: summary } = await axios.post<
         any,
         AxiosResponse<SummaryCompletionResponse, any>
-      >(`${process.env.NEXT_PUBLIC_API_URL}/api/analyze`, { fileUrl: uploadResult.url })
+      >(`${process.env.NEXT_PUBLIC_APP_URL}/api/analyze`, { fileUrl: fileUploadUrl })
 
       if ("content" in summary) setSummary(summary.content)
 
@@ -61,7 +63,7 @@ export default function Home() {
           disabled={isUploading}
         />
 
-        {uploadResult?.url && (
+        {fileUploadUrl && (
           <form action={formAction} className="mt-6">
             <LoadingButton
               text="Analyze"

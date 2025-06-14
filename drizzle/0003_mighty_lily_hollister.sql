@@ -1,0 +1,1 @@
+ALTER TABLE "feedback" RENAME COLUMN "ip_adderess" TO "ip_address";

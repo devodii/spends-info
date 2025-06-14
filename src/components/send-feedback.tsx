@@ -34,6 +34,8 @@ export const SendFeedback = () => {
     onSuccess: (response) => {
       setOpen(false)
 
+      console.log({ response })
+
       if (response.success) toast.success("Your feedback has been received")
       else toast.error("Something went wrong")
     },

@@ -20,7 +20,7 @@ export const summary = pgTable("summary", {
 export const feedback = pgTable("feedback", {
   id: varchar("id").primaryKey().notNull(),
   comment: varchar("comment").notNull(),
-  ip_address: varchar("ip_adderess").notNull(),
+  ip_address: varchar("ip_address").notNull(),
 })
 
 export type Upload = typeof upload.$inferSelect
