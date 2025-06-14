@@ -5,13 +5,12 @@ import { NextRequest, NextResponse } from "next/server"
 export const runtime = "nodejs"
 
 export const POST = async (req: NextRequest) => {
-  console.log("hit")
-  const payload = (await req.json()) as { fileUrl: string }
+  const payload = (await req.json()) as { fileUrl: string; fileId: string }
   const pdfText = await pdfToText(payload.fileUrl)
   const summary = await generateSummaryCompletion(pdfText)
 
   if (summary.success) {
-    await postSummary(JSON.stringify(summary.content), payload.fileUrl)
+    await postSummary(JSON.stringify(summary.content), payload.fileId)
   }
 
   return NextResponse.json(summary)

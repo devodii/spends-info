@@ -26,6 +26,7 @@ export default function Home() {
   const [summary, setSummary] = useState<ResponseSchema | null>(null)
 
   const fileUploadUrl = uploadResult?.url
+  const fileId = uploadResult?.id
 
   const [, formAction] = useActionState(async () => {
     try {
@@ -34,7 +35,7 @@ export default function Home() {
       const { data: summary } = await axios.post<
         any,
         AxiosResponse<SummaryCompletionResponse, any>
-      >(`${process.env.NEXT_PUBLIC_APP_URL}/api/analyze`, { fileUrl: fileUploadUrl })
+      >(`${process.env.NEXT_PUBLIC_APP_URL}/api/analyze`, { fileUrl: fileUploadUrl, fileId })
 
       if ("content" in summary) setSummary(summary.content)
 
