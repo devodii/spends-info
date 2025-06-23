@@ -1,0 +1,79 @@
+# Project Details: Spends Info Analyzer
+
+This project is a web application designed to analyze financial spending from uploaded PDF statements. It provides a structured breakdown of transactions, categorizes spending, and offers insights into financial habits.
+
+## Technologies Used
+
+- **Next.js**: React framework for building full-stack web applications.
+- **React**: JavaScript library for building user interfaces.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **TypeScript**: A strongly typed superset of JavaScript.
+- **pnpm**: A fast, disk space efficient package manager.
+- **Uploadthing**: A file upload library for Next.js.
+- **Framer Motion**: (Previously used, now replaced with CSS transitions for animations)
+- **Heroicons**: (Previously used, now replaced with inline SVGs for icons)
+
+## Setup Instructions
+
+To get this project up and running on your local machine, follow these steps:
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+-   **Node.js**: Version 18.x or higher (recommended). You can download it from [nodejs.org](https://nodejs.org/).
+-   **pnpm**: You can install pnpm globally using npm:
+    ```bash
+    npm install -g pnpm
+    ```
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository_url_here>
+    cd spends-info
+    ```
+    (Replace `<repository_url_here>` with the actual URL of your project's Git repository).
+
+2.  **Install dependencies:**
+    Navigate to the project's root directory and install the necessary packages using pnpm:
+    ```bash
+    pnpm install
+    ```
+
+### Environment Variables
+
+Create a `.env.local` file in the root of your project based on the `.env.example` or `.env.local.example` file (if available). You might need to configure `UPLOADTHING_SECRET` and `UPLOADTHING_APP_ID` for file uploads. Consult the Uploadthing documentation for more details.
+
+```env
+# Example .env.local content (adjust as needed)
+UPLOADTHING_SECRET="sk_live_..."
+UPLOADTHING_APP_ID="<your_app_id>"
+```
+
+### Running the Project
+
+To start the development server, run:
+
+```bash
+pnpm run dev
+```
+
+The application will be accessible at `http://localhost:3000` (or another port if 3000 is occupied).
+
+## Key Features
+
+-   **PDF Upload**: Users can upload PDF financial statements for analysis.
+-   **Transaction Analysis**: Extracts and categorizes spending data.
+-   **Categorized Spending**: Breaks down expenses into predefined categories (Food & Catering, Airtime & Data, Transfers to People, Bank & Platform Charges, Card & POS Spending, Religious Donations, Auto-Savings, Others).
+-   **Responsive UI**: Designed to work across various devices.
+
+## Project Structure (High-Level)
+
+-   `src/app/`: Contains Next.js page routes, API routes, global CSS, and schema definitions.
+-   `src/components/`: Reusable React components (e.g., `file-uploader.tsx`, `loading-button.tsx`, `transaction-analysis.tsx`).
+-   `src/hooks/`: Custom React hooks (e.g., `use-upload-file.ts`).
+-   `public/`: Static assets.
+-   `tailwind.config.ts`: Tailwind CSS configuration.
+-   `package.json`: Project metadata and dependencies. 
