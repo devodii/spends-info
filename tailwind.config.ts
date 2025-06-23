@@ -58,6 +58,10 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        sans: ['var(--font-poppins)'],
+        limelight: ['var(--font-limelight)', 'cursive'],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -1,18 +1,37 @@
-import { cn } from "@/lib/utils"
-import { useFormStatus } from "react-dom"
-import { Spinner } from "./spinner"
-import { Button, ButtonProps } from "./ui/button"
+"use client"
 
-interface Props extends Omit<ButtonProps, "children"> {
-  text: string
+import { Loader2 } from "lucide-react"
+import { Button } from "./ui/button"
+import { cn } from "@/lib/utils"
+
+interface LoadingButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  isLoading?: boolean
+  loading?: boolean
 }
-export const LoadingButton = ({ text, className, ...forwardedProps }: Props) => {
-  const { pending } = useFormStatus()
+
+export function LoadingButton({
+  children,
+  isLoading,
+  loading,
+  className,
+  ...props
+}: LoadingButtonProps) {
+  const isButtonLoading = isLoading || loading
 
   return (
-    <Button {...forwardedProps} className={cn("flex items-center gap-2", className)}>
-      <span className="font-semibold">{text}</span>
-      {pending && <Spinner />}
+    <Button
+      className={cn("button-86", className)}
+      disabled={isButtonLoading}
+      {...props}
+    >
+      {isButtonLoading ? (
+        <>
+          <Loader2 className="animate-spin mr-2" />
+          Loading...
+        </>
+      ) : (
+        children
+      )}
     </Button>
   )
 }

@@ -1,16 +1,38 @@
 export const makePrompt = (
   data: string,
-) => `Analyze the following transaction history and provide the result as a markdown summary. Include the following sections:
+) => `Analyze the following transaction history and provide a basic financial analysis. Structure the response according to these sections:
 
-1. **Summary**: Provide a brief overview of total income, total expenses, and the time when they spent the most money.
-2. **Recommendations**: Offer actionable advice to help the user save money or optimize spending based on their history, make it a list of the recommendations text
-3. **Top Recipient**: Explain which person or entity received the most money and the total amount sent to them, just say the recepients as a list names and make them bold.
+1. Money Summary:
+- Total money in
+- Total money out
+- Current balance
+
+2. Spending Categories:
+- Food & Dining
+- Transportation
+- Shopping
+- Bills & Utilities
+- Entertainment
+- Health
+- Education
+- Gifts
+- Other
+Include amount and percentage for each category
+
+3. Spending Patterns:
+- Highest spending day
+- Most common purchase
+- Biggest single expense
+
+4. Money-Saving Tips:
+- List specific recommendations
+- Include potential savings amounts
 
 Here is the transaction history in TEXT format:
 ${data}
 
-Respond with the content formatted as markdown.
-Include the appropriate header for each section, e.g ## Recommendations, etc..
-Always make sure you use whatever currency is in the statement, if not default to Naira.
+Respond with the content structured according to the schema provided.
+Always use the currency present in the statement (default to Naira if not specified).
+Format numbers with appropriate currency symbols and commas.
 
-If the "transaction history" provided by a user isn't a real transaction history, just set the value for \`is_transaction_history\` to false so that it can be handled by the frontend`
+If the "transaction history" provided isn't valid, set is_transaction_history to false.`
